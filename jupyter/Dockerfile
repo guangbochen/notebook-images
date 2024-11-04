@@ -8,6 +8,12 @@ FROM $BASE_IMG
 ARG TARGETARCH
 
 USER root
+# install - usefull linux packages
+RUN apt-get -yq update \
+ && apt-get -yq install --no-install-recommends \
+    build-essential \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 # args - software versions
 # https://github.com/jupyterlab/jupyterlab/releases
@@ -18,6 +24,8 @@ ARG MINIFORGE_VERSION=24.7.1-2
 ARG NODE_MAJOR_VERSION=20
 ARG PIP_VERSION=24.2
 ARG PYTHON_VERSION=3.11.10
+ARG RAY_VERSION=2.35.0
+ARG JUYPTER_ZH_VERSION=4.2.post3
 
 # install -- node.js
 RUN export DEBIAN_FRONTEND=noninteractive \
