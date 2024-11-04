@@ -7,6 +7,9 @@ on:
     paths:
       - notebook-servers/**
 
+env:
+  REGISTRY: ${{ vars.REGISTRY || 'docker.io/oneblockai' }}
+
 permissions:
   contents: write
   packages: write
