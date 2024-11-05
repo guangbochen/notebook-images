@@ -1,0 +1,42 @@
+name: Build & Publish Notebook Servers
+on:
+  push:
+    branches:
+      - test*
+
+env:
+  REGISTRY: ${{ vars.DOCKER_REGISTRY || 'docker.io/oneblockai' }}
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  base_images:
+    name: Build & Push - Base
+    uses: ./.github/workflows/notebook_servers_publish_TEMPLATE.yaml
+    secrets: inherit
+    with:
+      build_arch: linux/amd64,linux/arm64
+      image_folders: |
+        base
+
+  jupyter_images:
+    name: Build & Push - Jupyter
+    uses: ./.github/workflows/notebook_servers_publish_TEMPLATE.yaml
+    needs: [ base_images ]
+    secrets: inherit
+    with:
+      build_arch: linux/amd64,linux/arm64
+      image_folders: |
+        jupyter
+
+  jupyter_pipeline_images:
+    name: Build & Push - Jupyter (SciPy)
+    uses: ./.github/workflows/notebook_servers_publish_TEMPLATE.yaml
+    needs: [ jupyter_images ]
+    secrets: inherit
+    with:
+      build_arch: linux/amd64,linux/arm64
+      image_folders: |
+        jupyter-pipeline
